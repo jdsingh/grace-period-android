@@ -17,7 +17,11 @@ By default, Grace Period library will restart the app, but this behavior can be 
 
 ### Integration
 
-First, you'll need to initialize the library with your desired configuration in your Application class:
+First, add the dependency to your gradle file:
+
+```compile('com.orchestral.graceperiod:grace-period:1.0.0')```
+
+Then you'll need to initialize the library with your desired configuration in your Application class:
 ```
 val gracePeriodConfig =
                 GracePeriodConfig.Builder()
