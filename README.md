@@ -12,8 +12,13 @@ With Grace Period library, we aim to simplify this and provide an easy way to in
 Grace Period offers the following functionality:
 
 Once enabled, it will allow the users during the specified period of time to use the app as long as they are interacting with it.
-In case the user no longer interacts with the app anymore, whether it is by going to a different app, or by just leaving their phone inactive, they will be kicked out of the app after the specified time expires.
+In case the user no longer interacts with the app anymore, whether it is by going to a different app, or by just leaving their phone inactive (even when your app is in foreground), they will be kicked out of the app after the specified time expires.
 By default, Grace Period library will restart the app, but this behavior can be changed by adding your own callback to react to  the Grace Period expired event. It can also notify the user about what just happened by setting the proper dialog configuration.
+
+The following diagram illustrates the flow:
+![graceperiod](https://user-images.githubusercontent.com/7469647/30615610-892a795e-9de3-11e7-9db2-84f778e8c916.png)
+
+It is worth mentioning that what is described above as *Grace Period Timeout*, is an irreversible state that is handled internally so your app receives the appropriate *Grace Period Expired* callback only once it is in foreground.
 
 ### Integration
 
@@ -70,7 +75,7 @@ Note: To call it from Java, use `GracePeriod.INSTANCE.methodName()`
 
 ### Dependencies
 
-It is important to note that Grace Period library currently depends on [RxJava 1.x](https://github.com/ReactiveX/RxJava/tree/1.x). There are plans to update to RxJava 2.xgit  and it is also a possibility to remove this dependency altogether. This would require though to re-write the core logic of the library.
+It is important to note that Grace Period library currently depends on [RxJava 1.x](https://github.com/ReactiveX/RxJava/tree/1.x). There are plans to update to [RxJava 2.x](https://github.com/ReactiveX/RxJava/tree/2.x) and it is also a possibility to remove this dependency altogether. This would require though to re-write some of the core logic of the library.
 
 ### Communication Channels
 
