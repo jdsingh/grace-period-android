@@ -1,4 +1,4 @@
-Grace Period
+Grace Period  [![Build Status](https://travis-ci.org/orionhealth/grace-period-android.svg?branch=master)](https://travis-ci.org/orionhealth/grace-period-android)
 =====================
 *A library to kick users out*
 
