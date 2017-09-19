@@ -1,7 +1,29 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-def libraryVersion = '0.1.6'
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'grace-period-android'
+
+    publishedGroupId = 'com.orchestral.graceperiod'
+    libraryName = 'Grace Period'
+    artifact = 'grace-period'
+
+    libraryDescription = 'A library to kick users out of your Android app when the session expired.'
+
+    siteUrl = 'https://github.com/orionhealth/grace-period-android'
+    gitUrl = 'https://github.com/orionhealth/grace-period-android.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'danielocampo2'
+    developerName = 'Daniel Ocampo'
+    developerEmail = 'daniel.ocampo@orionhealth.com'
+
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
 
 android {
     compileSdkVersion 25
@@ -42,3 +64,6 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+apply from: '../buildsystem/maven.gradle'
+apply from: '../buildsystem/bintray.gradle'
