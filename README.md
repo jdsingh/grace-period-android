@@ -13,13 +13,13 @@ Grace Period offers the following functionality:
 
 Once enabled, it will allow the users during the specified period of time to use the app as long as they are interacting with it.
 In case the user no longer interacts with the app anymore, whether it is by going to a different app, or by just leaving their phone inactive, they will be kicked out of the app after the specified time expires.
-By default, Grace Period library will restart the app, but this behavior can be changed. It can also notify the user about what just happened by setting the proper dialog configuration.
+By default, Grace Period library will restart the app, but this behavior can be changed by adding your own callback to react to  the Grace Period expired event. It can also notify the user about what just happened by setting the proper dialog configuration.
 
 ### Integration
 
 First, add the dependency to your gradle file:
 
-```compile('com.orchestral.graceperiod:grace-period:1.0.0')```
+```compile 'com.orchestral.graceperiod:grace-period:1.0.0'```
 
 Then you'll need to initialize the library with your desired configuration in your Application class:
 ```
