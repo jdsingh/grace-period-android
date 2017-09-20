@@ -1,4 +1,5 @@
 Grace Period  [![Build Status](https://travis-ci.org/orionhealth/grace-period-android.svg?branch=master)](https://travis-ci.org/orionhealth/grace-period-android)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/bassaer/ChatMessageView/blob/master/LICENSE)
 =====================
 *A library to kick users out*
 
