@@ -7,7 +7,7 @@ ext {
 
     publishedGroupId = 'com.orchestral.graceperiod'
     libraryName = 'Grace Period'
-    artifact = 'grace-period'
+    artifact = 'graceperiod'
 
     libraryDescription = 'A library to kick users out of your Android app when the session expired.'
 
