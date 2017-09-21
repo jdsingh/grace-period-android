@@ -25,7 +25,7 @@ It is worth mentioning that what is described above as *Grace Period Timeout*, i
 
 First, add the dependency to your gradle file:
 
-```compile 'com.orchestral.graceperiod:grace-period:1.0.0'```
+```compile 'com.orchestral.graceperiod:graceperiod:1.0.0'```
 
 Then you'll need to initialize the library with your desired configuration in your Application class:
 ```
