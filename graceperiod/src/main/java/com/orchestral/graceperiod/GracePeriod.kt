@@ -41,20 +41,52 @@ object GracePeriod {
 
     private lateinit var gracePeriodManager: GracePeriodManager
 
+    /**
+     * Init Grace Period with a given configuration. Note that Grace Period timer won't start until
+     * {@link #enable()} method is called.
+     * @param gracePeriodConfig the Grace Period configuration
+     */
     fun init(gracePeriodConfig: GracePeriodConfig) {
         gracePeriodConfig.application.registerActivityLifecycleCallbacks(buildGracePeriodLifecycleCallbacks(gracePeriodConfig))
     }
 
+    /**
+     * Enable Grace Period. This will immediately start the timer and make Grace Period expire in the
+     * expiry time set.
+     * This method must usually be called when the session started, for example, once the user logs in.
+     */
     fun enable() {
         gracePeriodManager.enable()
     }
 
+    /**
+     * Disable Grace Period so the timer is fully stopped and the session can no longer expire nor the
+     * user be kicked out by the library.
+     * Must be called when you no longer want to make use of Grace Period, for example after logging out.
+     * Not calling this method might cause unwanted behaviour.
+     */
     fun disable() {
         gracePeriodManager.disable()
     }
 
+    /**
+     * Notify Grace Period that an interaction happened so the timer must be reset. What an interaction
+     * means is up to your app, but will normally refer to touches, swipes or any action done by the user
+     * on the UI.
+     * It is normally handled by Activities in {@link android.app.Activity#onUserInteraction()} method.
+     */
     fun notifyInteraction() {
         gracePeriodManager.requestRestart()
+    }
+
+    /**
+     * Update the Grace Period expiry time. Be aware this will reset the timer, meaning that from this
+     * very moment, the newExpiryTimeInSeconds should elapse for Grace Period to expire.
+     *
+     * @param newExpiryTimeInSeconds the new expiry time for Grace Period expressed in seconds.
+     */
+    fun updateExpiryTime(newExpiryTimeInSeconds: Int) {
+        gracePeriodManager.updateExpiryTime(newExpiryTimeInSeconds)
     }
 
     private fun buildGracePeriodLifecycleCallbacks(gracePeriodConfig: GracePeriodConfig): Application.ActivityLifecycleCallbacks? {

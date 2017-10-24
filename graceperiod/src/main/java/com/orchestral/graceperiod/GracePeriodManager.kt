@@ -27,21 +27,19 @@ package com.orchestral.graceperiod
 import com.orchestral.graceperiod.GracePeriodInternal.State.*
 import com.orchestral.graceperiod.callback.GracePeriodCallback
 import com.orchestral.graceperiod.lifecycle.AppInBackgroundAgent
-import com.orchestral.graceperiod.usecases.ChangeGracePeriodStatusUseCase
-import com.orchestral.graceperiod.usecases.CheckIfGracePeriodExpiredUseCase
-import com.orchestral.graceperiod.usecases.RequestGracePeriodRestartUseCase
-import com.orchestral.graceperiod.usecases.WasKickedOutByGracePeriodUseCase
+import com.orchestral.graceperiod.usecases.*
 import rx.Subscriber
 
 
 internal class GracePeriodManager(val gracePeriodCallback: GracePeriodCallback,
-                                  val gracePeriodExpiryTimeInSeconds: Int,
+                                  var gracePeriodExpiryTimeInSeconds: Int,
                                   val appInBackgroundAgent: AppInBackgroundAgent) :
         ChangeGracePeriodStatusUseCase,
         RequestGracePeriodRestartUseCase,
         CheckIfGracePeriodExpiredUseCase,
         GracePeriodStateCallback,
-        WasKickedOutByGracePeriodUseCase {
+        WasKickedOutByGracePeriodUseCase,
+        UpdateExpiryTimeUseCase {
 
     private var currentGracePeriodState: GracePeriodInternal.State = STATE_DISABLED
     private var kickedOutByGracePeriod = false
@@ -61,6 +59,16 @@ internal class GracePeriodManager(val gracePeriodCallback: GracePeriodCallback,
 
     override fun checkExpired() {
         currentGracePeriodState.checkExpired()
+    }
+
+    override fun updateExpiryTime(newExpiryTimeInSeconds: Int) {
+        gracePeriodExpiryTimeInSeconds = newExpiryTimeInSeconds
+        reset()
+    }
+
+    private fun reset() {
+        disable()
+        enable()
     }
 
     override fun onGracePeriodTimeout() {
