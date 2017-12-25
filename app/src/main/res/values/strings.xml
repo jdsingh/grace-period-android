@@ -24,7 +24,12 @@
 
 <resources>
     <string name="app_name">GracePeriodApp</string>
-    <string name="logged_in_message">You are now logged in, and if you don\'t interact with this great app, you\'ll be kicked out in 2 minutes :)</string>
+    <string name="logged_in_message">You are now logged in, and if you don\'t interact with this great app, you\'ll be kicked out in 10 seconds :)</string>
     <string name="button_logout">Logout</string>
     <string name="button_login">Login</string>
+    <string name="long_live_activity_message">You are now at long live activity, and here you can update the expiry time to new value and reset to the initial value.</string>
+    <string name="button_long_live_activity">Long Live Activity</string>
+    <string name="current_expiry_time">Current expiry time: %d seconds</string>
+    <string name="change_expiry_period_to_20_seconds">Change Expiry Time to 20 Seconds</string>
+    <string name="reset">Reset</string>
 </resources>

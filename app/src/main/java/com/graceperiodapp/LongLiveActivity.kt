@@ -24,46 +24,42 @@
 
 package com.graceperiodapp
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.orchestral.graceperiod.GracePeriod
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_long_live.*
 
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
-class MainActivity : AppCompatActivity() {
+class LongLiveActivity : AppCompatActivity() {
+
+    // cache the initial value of expiry time set on GracePeriod
+    private val currentExpiryTime = GracePeriod.currentExpiryTime()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_long_live)
 
-        setContentView(R.layout.activity_main)
+        displayCurrentExpiryTime()
 
-        logoutButton.setOnClickListener {
-            disableGracePeriod()
-            navigateToLogin()
+        btn_change_expiry_period.setOnClickListener {
+            GracePeriod.updateExpiryTime(20)
+
+            displayCurrentExpiryTime()
         }
 
-        longLiveButton.setOnClickListener {
-            navigateToLongLiveActivity()
+        btn_reset.setOnClickListener {
+            // Restore expiry time to initial value.
+            GracePeriod.updateExpiryTime(currentExpiryTime)
+
+            displayCurrentExpiryTime()
         }
     }
 
-    private fun navigateToLongLiveActivity() {
-        val intent = Intent(this, LongLiveActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun navigateToLogin() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-    }
-
-    private fun disableGracePeriod() {
-        GracePeriod.disable()
+    private fun displayCurrentExpiryTime() {
+        current_expiry_time.text =
+                getString(R.string.current_expiry_time, GracePeriod.currentExpiryTime())
     }
 
     override fun onUserInteraction() {

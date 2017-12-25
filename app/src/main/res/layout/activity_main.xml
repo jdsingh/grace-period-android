@@ -23,7 +23,8 @@
   ~ THE SOFTWARE.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -45,4 +46,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:id="@+id/logoutButton" />
+
+    <Button
+        android:id="@+id/longLiveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoutButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/button_long_live_activity" />
 </RelativeLayout>

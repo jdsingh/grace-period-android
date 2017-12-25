@@ -31,15 +31,16 @@ import com.orchestral.graceperiod.usecases.*
 import rx.Subscriber
 
 
-internal class GracePeriodManager(val gracePeriodCallback: GracePeriodCallback,
-                                  var gracePeriodExpiryTimeInSeconds: Int,
-                                  val appInBackgroundAgent: AppInBackgroundAgent) :
+internal class GracePeriodManager(private val gracePeriodCallback: GracePeriodCallback,
+                                  private var gracePeriodExpiryTimeInSeconds: Int,
+                                  private val appInBackgroundAgent: AppInBackgroundAgent) :
         ChangeGracePeriodStatusUseCase,
         RequestGracePeriodRestartUseCase,
         CheckIfGracePeriodExpiredUseCase,
         GracePeriodStateCallback,
         WasKickedOutByGracePeriodUseCase,
-        UpdateExpiryTimeUseCase {
+        UpdateExpiryTimeUseCase,
+        GetCurrentExpiryTimeUseCase {
 
     private var currentGracePeriodState: GracePeriodInternal.State = STATE_DISABLED
     private var kickedOutByGracePeriod = false
@@ -64,6 +65,10 @@ internal class GracePeriodManager(val gracePeriodCallback: GracePeriodCallback,
     override fun updateExpiryTime(newExpiryTimeInSeconds: Int) {
         gracePeriodExpiryTimeInSeconds = newExpiryTimeInSeconds
         reset()
+    }
+
+    override fun getCurrentExpiryTime(): Int {
+        return gracePeriodExpiryTimeInSeconds
     }
 
     private fun reset() {

@@ -89,6 +89,11 @@ object GracePeriod {
         gracePeriodManager.updateExpiryTime(newExpiryTimeInSeconds)
     }
 
+    /**
+     * Returns the current Grace Period expiry time expressed in seconds.
+     */
+    fun currentExpiryTime(): Int = gracePeriodManager.getCurrentExpiryTime()
+
     private fun buildGracePeriodLifecycleCallbacks(gracePeriodConfig: GracePeriodConfig): Application.ActivityLifecycleCallbacks? {
         val appInBackgroundAgent = AppInBackgroundAgent(SharedPreferencesStorageAgent(gracePeriodConfig.application, "GracePeriod"))
         val currentActivityProvider = CurrentActivityProvider()
