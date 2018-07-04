@@ -25,27 +25,25 @@
 package com.orchestral.graceperiod.lifecycle
 
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.orchestral.graceperiod.BuildConfig
 import com.orchestral.graceperiod.storage.StorageAgent
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import rx.Observable
-import rx.observers.TestSubscriber
 
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
 class AppInBackgroundAgentTest {
 
-    @Mock lateinit var mockStorageAgent: StorageAgent
+    @Mock
+    lateinit var mockStorageAgent: StorageAgent
 
-    lateinit var appInBackgroundAgent: AppInBackgroundAgent
-    val key = BuildConfig.APPLICATION_ID + "AppInBackground"
-
-    val testSubscriber = TestSubscriber<Boolean>()
+    private lateinit var appInBackgroundAgent: AppInBackgroundAgent
+    private val key = BuildConfig.APPLICATION_ID + "AppInBackground"
 
     @Before
     fun setUp() {
@@ -55,7 +53,8 @@ class AppInBackgroundAgentTest {
 
     @Test
     fun isAppInBackground_shouldGetValueFromStorageWithCorrectKey() {
-        `when`(mockStorageAgent.getObjectForKey(key, Boolean::class.java)).thenReturn(Observable.just(false))
+        whenever(mockStorageAgent.getObjectForKey(key, Boolean::class.java))
+            .thenReturn(Single.just(false))
 
         appInBackgroundAgent.isAppInBackground()
 
@@ -64,38 +63,38 @@ class AppInBackgroundAgentTest {
 
     @Test
     fun appInBackground_shouldReturnTrue() {
-        `when`(mockStorageAgent.getObjectForKey(key, Boolean::class.java)).thenReturn(Observable.just(true))
+        whenever(mockStorageAgent.getObjectForKey(key, Boolean::class.java))
+            .thenReturn(Single.just(true))
 
-        appInBackgroundAgent.isAppInBackground().subscribe(testSubscriber)
+        val testSubscriber = appInBackgroundAgent.isAppInBackground().test()
 
-        with(testSubscriber) {
-            assertCompleted()
-            assertValue(true)
-        }
+        testSubscriber
+            .assertComplete()
+            .assertValue(true)
     }
 
     @Test
     fun appNotInBackground_shouldReturnFalse() {
-        `when`(mockStorageAgent.getObjectForKey(key, Boolean::class.java)).thenReturn(Observable.just(false))
+        whenever(mockStorageAgent.getObjectForKey(key, Boolean::class.java))
+            .thenReturn(Single.just(false))
 
-        appInBackgroundAgent.isAppInBackground().subscribe(testSubscriber)
+        val testSubscriber = appInBackgroundAgent.isAppInBackground().test()
 
-        with(testSubscriber) {
-            assertCompleted()
-            assertValue(false)
-        }
+        testSubscriber
+            .assertComplete()
+            .assertValue(false)
     }
 
     @Test
     fun error_shouldReturnFalse() {
-        `when`(mockStorageAgent.getObjectForKey(key, Boolean::class.java)).thenReturn(Observable.error(RuntimeException("Unexpected Error")))
+        whenever(mockStorageAgent.getObjectForKey(key, Boolean::class.java))
+            .thenReturn(Single.error(RuntimeException("Unexpected Error")))
 
-        appInBackgroundAgent.isAppInBackground().subscribe(testSubscriber)
+        val testSubscriber = appInBackgroundAgent.isAppInBackground().test()
 
-        with(testSubscriber) {
-            assertCompleted()
-            assertValue(false)
-        }
+        testSubscriber
+            .assertComplete()
+            .assertValue(false)
     }
 
     @Test

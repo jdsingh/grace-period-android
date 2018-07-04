@@ -28,19 +28,18 @@ import com.orchestral.graceperiod.GracePeriodInternal.State.*
 import com.orchestral.graceperiod.callback.GracePeriodCallback
 import com.orchestral.graceperiod.lifecycle.AppInBackgroundAgent
 import com.orchestral.graceperiod.usecases.*
-import rx.Subscriber
 
-
-internal class GracePeriodManager(private val gracePeriodCallback: GracePeriodCallback,
-                                  private var gracePeriodExpiryTimeInSeconds: Int,
-                                  private val appInBackgroundAgent: AppInBackgroundAgent) :
-        ChangeGracePeriodStatusUseCase,
-        RequestGracePeriodRestartUseCase,
-        CheckIfGracePeriodExpiredUseCase,
-        GracePeriodStateCallback,
-        WasKickedOutByGracePeriodUseCase,
-        UpdateExpiryTimeUseCase,
-        GetCurrentExpiryTimeUseCase {
+internal class GracePeriodManager(
+    private val gracePeriodCallback: GracePeriodCallback,
+    private var gracePeriodExpiryTimeInSeconds: Int,
+    private val appInBackgroundAgent: AppInBackgroundAgent
+) : ChangeGracePeriodStatusUseCase,
+    RequestGracePeriodRestartUseCase,
+    CheckIfGracePeriodExpiredUseCase,
+    GracePeriodStateCallback,
+    WasKickedOutByGracePeriodUseCase,
+    UpdateExpiryTimeUseCase,
+    GetCurrentExpiryTimeUseCase {
 
     private var currentGracePeriodState: GracePeriodInternal.State = STATE_DISABLED
     private var kickedOutByGracePeriod = false
@@ -83,17 +82,11 @@ internal class GracePeriodManager(private val gracePeriodCallback: GracePeriodCa
 
     private fun checkIfItShouldExpireImmediately() {
         appInBackgroundAgent.isAppInBackground()
-                .subscribe(object : Subscriber<Boolean>() {
-                    override fun onCompleted() {
-                    }
+            .subscribe({ isInBackground ->
+                if (!isInBackground) onGracePeriodExpired()
+            }, { _: Throwable ->
 
-                    override fun onError(e: Throwable?) {
-                    }
-
-                    override fun onNext(isInBackground: Boolean) {
-                        if (!isInBackground) onGracePeriodExpired()
-                    }
-                })
+            })
     }
 
     override fun onGracePeriodExpired() {

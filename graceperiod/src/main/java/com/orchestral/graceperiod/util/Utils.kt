@@ -25,25 +25,31 @@
 package com.orchestral.graceperiod.util
 
 import android.app.Activity
-import android.content.Context
-import android.support.annotation.StringRes
-import rx.Observable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
-fun Activity.createAndShowDialog(title: String,
-                                 message: String,
-                                 positiveButtonText: String,
-                                 callback: () -> Unit = {}) {
+fun Activity.createAndShowDialog(
+    title: String,
+    message: String,
+    positiveButtonText: String,
+    callback: () -> Unit = {}
+) {
     var builder = android.support.v7.app.AlertDialog.Builder(this)
     builder = builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(positiveButtonText) { dialog, which -> callback() }
+        .setMessage(message)
+        .setPositiveButton(positiveButtonText) { _, _ -> callback() }
 
     builder.show()
 }
 
 fun Observable<Boolean>.filterTrue(): Observable<Boolean> {
+    return this.filter { it }
+}
+
+fun Single<Boolean>.filterTrue(): Maybe<Boolean> {
     return this.filter { it }
 }
