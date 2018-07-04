@@ -2,7 +2,7 @@ language: android
 android:
   components:
     - tools
-    - build-tools-25.0.3
+    - build-tools-27.0.3
     - platform-tools
     - extra-google-android-support
 
@@ -13,7 +13,7 @@ android:
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-25
+    - sys-img-armeabi-v7a-android-27
 
 before_script:
   # Tests crash if a local.properties file isn't present; this file is not kept
@@ -21,4 +21,4 @@ before_script:
 - touch local.properties
 
 before_install:
-- yes | sdkmanager "platforms;android-26"
+- yes | sdkmanager "platforms;android-27"
