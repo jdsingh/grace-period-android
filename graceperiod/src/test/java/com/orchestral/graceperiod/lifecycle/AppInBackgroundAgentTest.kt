@@ -24,6 +24,7 @@
 
 package com.orchestral.graceperiod.lifecycle
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.orchestral.graceperiod.BuildConfig
@@ -31,23 +32,19 @@ import com.orchestral.graceperiod.storage.StorageAgent
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
 class AppInBackgroundAgentTest {
 
-    @Mock
-    lateinit var mockStorageAgent: StorageAgent
+    private val mockStorageAgent: StorageAgent = mock()
 
     private lateinit var appInBackgroundAgent: AppInBackgroundAgent
     private val key = BuildConfig.APPLICATION_ID + "AppInBackground"
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
         appInBackgroundAgent = AppInBackgroundAgent(mockStorageAgent)
     }
 
