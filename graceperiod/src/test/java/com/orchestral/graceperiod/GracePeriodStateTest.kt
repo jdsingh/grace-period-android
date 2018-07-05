@@ -30,7 +30,6 @@ import com.nhaarman.mockito_kotlin.verify
 import com.orchestral.graceperiod.GracePeriodInternal.State.*
 import com.orchestral.graceperiod.utils.TestSchedulerRule
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.TimeUnit
@@ -45,10 +44,6 @@ class GracePeriodStateTest {
 
     private val mockGracePeriodStateCallback: GracePeriodStateCallback = mock()
     private var gracePeriodState: GracePeriodInternal.State = STATE_DISABLED
-
-    @Before
-    fun setUp() {
-    }
 
     @Test
     fun `if grace period is disabled should never invoke any callback`() {

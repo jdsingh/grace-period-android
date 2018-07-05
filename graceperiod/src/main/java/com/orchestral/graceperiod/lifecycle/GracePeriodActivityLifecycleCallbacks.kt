@@ -27,21 +27,21 @@ package com.orchestral.graceperiod.lifecycle
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import com.orchestral.consumermobile.presentation.kickedout.KickedOutPresenter
 import com.orchestral.graceperiod.presentation.GracePeriodMessageView
+import com.orchestral.graceperiod.presentation.KickedOutPresenter
 import com.orchestral.graceperiod.presentation.KickedOutViewImpl
 import com.orchestral.graceperiod.usecases.CheckIfGracePeriodExpiredUseCase
 import com.orchestral.graceperiod.usecases.RequestGracePeriodRestartUseCase
 
-
-internal class GracePeriodActivityLifecycleCallbacks(val customActivityLifecycleCallbacks: Application.ActivityLifecycleCallbacks?,
-                                                     val currentActivityProvider: CurrentActivityProvider,
-                                                     val requestGracePeriodRestartUseCase: RequestGracePeriodRestartUseCase,
-                                                     val checkGracePeriodExpiredUseCase: CheckIfGracePeriodExpiredUseCase,
-                                                     val kickedOutPresenter: KickedOutPresenter,
-                                                     val appInBackgroundAgent: AppInBackgroundAgent,
-                                                     val activeActivitiesAgent: ActiveActivitiesAgent)
-    : Application.ActivityLifecycleCallbacks {
+internal class GracePeriodActivityLifecycleCallbacks(
+    private val customActivityLifecycleCallbacks: Application.ActivityLifecycleCallbacks?,
+    private val currentActivityProvider: CurrentActivityProvider,
+    private val requestGracePeriodRestartUseCase: RequestGracePeriodRestartUseCase,
+    private val checkGracePeriodExpiredUseCase: CheckIfGracePeriodExpiredUseCase,
+    private val kickedOutPresenter: KickedOutPresenter,
+    private val appInBackgroundAgent: AppInBackgroundAgent,
+    private val activeActivitiesAgent: ActiveActivitiesAgent
+) : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         if (activity is GracePeriodMessageView) {

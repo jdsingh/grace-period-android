@@ -24,7 +24,6 @@
 
 package com.orchestral.graceperiod.presentation
 
-
 interface Presenter<T : Presenter.View> {
     fun attachView(view: T)
     fun onViewReady()

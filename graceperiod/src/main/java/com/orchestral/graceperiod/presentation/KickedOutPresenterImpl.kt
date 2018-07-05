@@ -24,22 +24,22 @@
 
 package com.orchestral.graceperiod.presentation
 
-import com.orchestral.consumermobile.presentation.kickedout.KickedOutPresenter
 import com.orchestral.graceperiod.callback.GracePeriodCallback
 import com.orchestral.graceperiod.config.GracePeriodDialogConfig
 import com.orchestral.graceperiod.usecases.WasKickedOutByGracePeriodUseCase
 
-
-internal class KickedOutPresenterImpl(val wasKickedOutByGracePeriodUseCase: WasKickedOutByGracePeriodUseCase,
-                                      val gpDialogConfig: GracePeriodDialogConfig,
-                                      val gracePeriodCallback: GracePeriodCallback)
-    : KickedOutPresenter {
+internal class KickedOutPresenterImpl(
+    private val wasKickedOutByGracePeriodUseCase: WasKickedOutByGracePeriodUseCase,
+    private val gpDialogConfig: GracePeriodDialogConfig,
+    private val gracePeriodCallback: GracePeriodCallback
+) : KickedOutPresenter {
 
     private var view: KickedOutMessageView? = null
 
     override fun onNewKickedOutMessageViewCreated() {
         if (gpDialogConfig.showDialog
-                && wasKickedOutByGracePeriodUseCase.wasKickedOut()) {
+            && wasKickedOutByGracePeriodUseCase.wasKickedOut()
+        ) {
             showGracePeriodExpiredDialog()
             gracePeriodCallback.onGracePeriodDialogDisplayed()
         }
@@ -50,9 +50,10 @@ internal class KickedOutPresenterImpl(val wasKickedOutByGracePeriodUseCase: WasK
             view?.showCustomKickedOutByGracePeriodDialog(gpDialogConfig.customDialog)
         } else if (gpDialogConfig.dialogTitle != null || gpDialogConfig.dialogText != null) {
             view?.showDefaultKickedOutByGracePeriodDialog(
-                    gpDialogConfig.dialogTitle ?: "",
-                    gpDialogConfig.dialogText ?: "",
-                    gpDialogConfig.dialogButtonText ?: "")
+                gpDialogConfig.dialogTitle ?: "",
+                gpDialogConfig.dialogText ?: "",
+                gpDialogConfig.dialogButtonText ?: ""
+            )
         } else {
             view?.showDefaultKickedOutByGracePeriodDialog()
         }

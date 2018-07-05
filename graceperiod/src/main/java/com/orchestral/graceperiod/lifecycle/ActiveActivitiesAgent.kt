@@ -24,7 +24,6 @@
 
 package com.orchestral.graceperiod.lifecycle
 
-
 class ActiveActivitiesAgent {
 
     private var activeActivities = 0

@@ -24,7 +24,6 @@
 
 package com.orchestral.graceperiod.usecases
 
-
 interface ChangeGracePeriodStatusUseCase {
     fun enable()
     fun disable()

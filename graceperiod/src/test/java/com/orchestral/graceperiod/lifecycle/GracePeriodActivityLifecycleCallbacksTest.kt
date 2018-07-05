@@ -30,7 +30,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.orchestral.consumermobile.presentation.kickedout.KickedOutPresenter
+import com.orchestral.graceperiod.presentation.KickedOutPresenter
 import com.orchestral.graceperiod.usecases.CheckIfGracePeriodExpiredUseCase
 import com.orchestral.graceperiod.usecases.RequestGracePeriodRestartUseCase
 import io.reactivex.Completable

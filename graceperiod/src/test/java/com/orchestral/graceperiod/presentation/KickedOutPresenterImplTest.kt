@@ -25,7 +25,6 @@
 package com.orchestral.graceperiod.presentation
 
 import com.nhaarman.mockito_kotlin.*
-import com.orchestral.consumermobile.presentation.kickedout.KickedOutPresenter
 import com.orchestral.graceperiod.callback.GracePeriodCallback
 import com.orchestral.graceperiod.config.GracePeriodDialogConfig
 import com.orchestral.graceperiod.usecases.WasKickedOutByGracePeriodUseCase
