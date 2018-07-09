@@ -24,7 +24,6 @@
 
 package com.orchestral.graceperiod
 
-
 internal interface GracePeriodStateCallback {
     fun onGracePeriodTimeout()
     fun onGracePeriodExpired()

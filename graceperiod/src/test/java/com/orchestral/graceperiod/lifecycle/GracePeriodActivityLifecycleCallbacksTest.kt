@@ -27,50 +27,47 @@ package com.orchestral.graceperiod.lifecycle
 import android.app.Activity
 import android.app.Application
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
-import com.orchestral.consumermobile.presentation.kickedout.KickedOutPresenter
+import com.nhaarman.mockito_kotlin.whenever
+import com.orchestral.graceperiod.presentation.KickedOutPresenter
 import com.orchestral.graceperiod.usecases.CheckIfGracePeriodExpiredUseCase
 import com.orchestral.graceperiod.usecases.RequestGracePeriodRestartUseCase
+import io.reactivex.Completable
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-import rx.Observable
 
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
 class GracePeriodActivityLifecycleCallbacksTest {
 
-    @Mock private lateinit var mockCurrentActivityProvider: CurrentActivityProvider
-    @Mock private lateinit var mockKickedOutPresenter: KickedOutPresenter
-    @Mock lateinit var mockRequestGracePeriodRestartUseCase: RequestGracePeriodRestartUseCase
-    @Mock lateinit var mockCheckIfGracePeriodExpiredUseCase: CheckIfGracePeriodExpiredUseCase
-    @Mock lateinit var mockAppInBackgroundAgent: AppInBackgroundAgent
-    @Mock lateinit var mockActiveActivitiesAgent: ActiveActivitiesAgent
-    @Mock lateinit var mockActivityCallbacks: Application.ActivityLifecycleCallbacks
-
-    @Mock lateinit var mockActivity: Activity
+    private val mockCurrentActivityProvider: CurrentActivityProvider = mock()
+    private val mockKickedOutPresenter: KickedOutPresenter = mock()
+    private val mockRequestGracePeriodRestartUseCase: RequestGracePeriodRestartUseCase = mock()
+    private val mockCheckIfGracePeriodExpiredUseCase: CheckIfGracePeriodExpiredUseCase = mock()
+    private val mockAppInBackgroundAgent: AppInBackgroundAgent = mock()
+    private val mockActiveActivitiesAgent: ActiveActivitiesAgent = mock()
+    private val mockActivityCallbacks: Application.ActivityLifecycleCallbacks = mock()
+    private val mockActivity: Activity = mock()
 
     private lateinit var gracePeriodLifecycleCallbacks: GracePeriodActivityLifecycleCallbacks
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
         gracePeriodLifecycleCallbacks =
                 GracePeriodActivityLifecycleCallbacks(
-                        mockActivityCallbacks,
-                        mockCurrentActivityProvider,
-                        mockRequestGracePeriodRestartUseCase,
-                        mockCheckIfGracePeriodExpiredUseCase,
-                        mockKickedOutPresenter,
-                        mockAppInBackgroundAgent,
-                        mockActiveActivitiesAgent
+                    mockActivityCallbacks,
+                    mockCurrentActivityProvider,
+                    mockRequestGracePeriodRestartUseCase,
+                    mockCheckIfGracePeriodExpiredUseCase,
+                    mockKickedOutPresenter,
+                    mockAppInBackgroundAgent,
+                    mockActiveActivitiesAgent
                 )
 
-        `when`(mockAppInBackgroundAgent.setAppInBackground(any()))
-                .thenReturn(Observable.just(null))
+        whenever(mockAppInBackgroundAgent.setAppInBackground(any()))
+            .thenReturn(Completable.complete())
     }
 
     @Test
@@ -82,7 +79,8 @@ class GracePeriodActivityLifecycleCallbacksTest {
 
     @Test
     fun onActivityStarted_noActiveActivities_shouldSetAppAsNotInBackground() {
-        `when`(mockActiveActivitiesAgent.noActiveActivities()).thenReturn(true)
+        whenever(mockActiveActivitiesAgent.noActiveActivities())
+            .thenReturn(true)
 
         gracePeriodLifecycleCallbacks.onActivityStarted(mockActivity)
 
@@ -92,7 +90,8 @@ class GracePeriodActivityLifecycleCallbacksTest {
 
     @Test
     fun onActivityStopped_noActiveActivities_shouldSetAppAsInBackgroundAndNotifyActivityStopped() {
-        `when`(mockActiveActivitiesAgent.noActiveActivities()).thenReturn(true)
+        whenever(mockActiveActivitiesAgent.noActiveActivities())
+            .thenReturn(true)
 
         gracePeriodLifecycleCallbacks.onActivityStopped(mockActivity)
 

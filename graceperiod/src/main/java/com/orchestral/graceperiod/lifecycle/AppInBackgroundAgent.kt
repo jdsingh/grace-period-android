@@ -25,22 +25,23 @@
 package com.orchestral.graceperiod.lifecycle
 
 import com.orchestral.graceperiod.BuildConfig
+
 import com.orchestral.graceperiod.storage.StorageAgent
-import rx.Observable
+import io.reactivex.Completable
+import io.reactivex.Single
 
+private const val APP_IN_BACKGROUND_STORAGE_KEY = BuildConfig.APPLICATION_ID + "AppInBackground"
 
-class AppInBackgroundAgent(val storageAgent: StorageAgent) {
+class AppInBackgroundAgent(private val storageAgent: StorageAgent) {
 
-    val APP_IN_BACKGROUND_STORAGE_KEY = BuildConfig.APPLICATION_ID + "AppInBackground"
-
-    fun isAppInBackground(): Observable<Boolean> {
+    fun isAppInBackground(): Single<Boolean> {
         return storageAgent.getObjectForKey(APP_IN_BACKGROUND_STORAGE_KEY, Boolean::class.java)
-                .onErrorReturn {
-                    false
-                }
+            .onErrorReturn {
+                false
+            }
     }
 
-    fun setAppInBackground(inBackground: Boolean): Observable<Void> {
+    fun setAppInBackground(inBackground: Boolean): Completable {
         return storageAgent.storeObjectWithKey(APP_IN_BACKGROUND_STORAGE_KEY, inBackground)
     }
 

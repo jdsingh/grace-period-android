@@ -22,31 +22,31 @@
  * THE SOFTWARE.
  */
 
-package com.orchestral.common.testrules
+package com.orchestral.graceperiod.utils
 
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.TestScheduler
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import rx.plugins.RxJavaHooks
-import rx.schedulers.TestScheduler
-
 
 open class TestSchedulerRule : TestRule {
 
     val testScheduler = TestScheduler()
 
     override fun apply(base: Statement, d: Description): Statement {
+
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
-                RxJavaHooks.setOnIOScheduler { testScheduler }
-                RxJavaHooks.setOnComputationScheduler { testScheduler }
-                RxJavaHooks.setOnNewThreadScheduler { testScheduler }
+                RxJavaPlugins.setIoSchedulerHandler { testScheduler }
+                RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
+                RxJavaPlugins.setNewThreadSchedulerHandler { testScheduler }
 
                 try {
                     base.evaluate()
                 } finally {
-                    RxJavaHooks.reset()
+                    RxJavaPlugins.reset()
                 }
             }
         }

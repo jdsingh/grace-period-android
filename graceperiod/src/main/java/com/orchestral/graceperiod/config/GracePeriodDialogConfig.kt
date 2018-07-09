@@ -30,11 +30,12 @@ import android.app.AlertDialog
  * Copyright © 2017 Orion Health. All rights reserved.
  */
 data class GracePeriodDialogConfig internal constructor(
-        internal val showDialog: Boolean = false,
-        internal val customDialog: AlertDialog? = null,
-        internal val dialogTitle: String? = null,
-        internal val dialogText: String? = null,
-        internal val dialogButtonText: String? = null) {
+    internal val showDialog: Boolean = false,
+    internal val customDialog: AlertDialog? = null,
+    internal val dialogTitle: String? = null,
+    internal val dialogText: String? = null,
+    internal val dialogButtonText: String? = null
+) {
 
     open class Builder {
         private var customDialog: AlertDialog? = null
@@ -43,33 +44,33 @@ data class GracePeriodDialogConfig internal constructor(
         private var okButtonText: String? = null
         private var showDialog: Boolean = false
 
-        fun showDialogWhenExpired(showDialog: Boolean) : Builder {
+        fun showDialogWhenExpired(showDialog: Boolean): Builder {
             this.showDialog = showDialog
             return this
         }
 
-        fun customDialog(alertDialog: AlertDialog) : Builder {
+        fun customDialog(alertDialog: AlertDialog): Builder {
             this.customDialog = alertDialog
             return this
         }
 
-        fun dialogTitle(title: String) : Builder {
+        fun dialogTitle(title: String): Builder {
             this.dialogTitle = title
             return this
         }
 
-        fun dialogText(text: String) : Builder {
+        fun dialogText(text: String): Builder {
             this.dialogText = text
             return this
         }
 
-        fun dialogOkButtonText(okButtonText: String) : Builder {
+        fun dialogOkButtonText(okButtonText: String): Builder {
             this.okButtonText = okButtonText
             return this
         }
 
-        fun build() : GracePeriodDialogConfig =
-                GracePeriodDialogConfig(showDialog, customDialog, dialogTitle, dialogText, okButtonText)
+        fun build(): GracePeriodDialogConfig =
+            GracePeriodDialogConfig(showDialog, customDialog, dialogTitle, dialogText, okButtonText)
 
     }
 

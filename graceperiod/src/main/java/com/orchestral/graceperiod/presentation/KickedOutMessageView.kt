@@ -25,8 +25,6 @@
 package com.orchestral.graceperiod.presentation
 
 import android.app.AlertDialog
-import com.orchestral.graceperiod.presentation.Presenter
-
 
 interface KickedOutMessageView : Presenter.View {
 

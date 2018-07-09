@@ -27,78 +27,86 @@ package com.orchestral.graceperiod.storage
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import rx.Observable
-import rx.functions.Func0
+import io.reactivex.Completable
+import io.reactivex.Single
 import java.io.Serializable
 
 /**
  * Copyright © 2016 Orion Health. All rights reserved. 27/01/16.
  */
-class SharedPreferencesStorageAgent(private val context: Context, private val sharedPrefsName: String)
-    : StorageAgent {
+class SharedPreferencesStorageAgent(
+    private val context: Context,
+    private val sharedPrefsName: String
+) : StorageAgent {
 
     private val gson: Gson = Gson()
 
     private val sharedPreferences: SharedPreferences
         get() = context.getSharedPreferences(sharedPrefsName, Context.MODE_PRIVATE)
 
-    override fun storeObjectWithKey(key: String, objectToStore: Serializable): Observable<Void> {
-        return Observable.defer {
+    override fun storeObjectWithKey(key: String, objectToStore: Serializable): Completable {
+        return Completable.defer {
             val objectAsJson = gson.toJson(objectToStore)
             val commitResult = sharedPreferences.edit().putString(key, objectAsJson).commit()
 
             if (!commitResult) {
-                Observable.error<Void>(StorageAgent.WriteFailureException())
+                Completable.error(StorageAgent.WriteFailureException())
             } else {
-                Observable.just<Void>(null)
+                Completable.complete()
             }
         }
     }
 
-    override fun clearObjectWithKey(key: String): Observable<Void> {
-        return Observable.defer {
+    override fun clearObjectWithKey(key: String): Completable {
+        return Completable.defer {
             val commitResult = sharedPreferences.edit().remove(key).commit()
 
             if (!commitResult) {
-                Observable.error<Void>(StorageAgent.WriteFailureException())
+                Completable.error(StorageAgent.WriteFailureException())
             } else {
-                Observable.just<Void>(null)
+                Completable.complete()
             }
         }
     }
 
-    override fun clear(): Observable<Void> {
-        return Observable.defer {
+    override fun clear(): Completable {
+        return Completable.defer {
             val commitResult = sharedPreferences.edit().clear().commit()
 
             if (!commitResult) {
-                Observable.error<Void>(StorageAgent.WriteFailureException())
+                Completable.error(StorageAgent.WriteFailureException())
             } else {
-                Observable.just<Void>(null)
+                Completable.complete()
             }
         }
     }
 
-    override fun <T> getObjectForKey(key: String, classOfObject: Class<T>): Observable<T> {
-        return Observable.defer(Func0 {
-            val objectAsJson = sharedPreferences.getString(key, null) ?:
-                    return@Func0 Observable.error<T>(StorageAgent.NoObjectForKeyException("No object found for key = " + key))
+    override fun <T> getObjectForKey(key: String, classOfObject: Class<T>): Single<T> {
+        return Single.defer {
+            val objectAsJson = sharedPreferences.getString(key, null)
+                    ?: return@defer Single.error<T>(
+                        StorageAgent.NoObjectForKeyException("No object found for key = $key")
+                    )
 
             val gson = Gson()
             val fromJson = gson.fromJson(objectAsJson, classOfObject)
-            Observable.just(fromJson)
-        })
+            Single.just(fromJson)
+        }
     }
 
-    override fun <T> getObjectForKeyWithDefault(key: String, classOfObject: Class<T>, defaultValue: T): Observable<T> {
-        return Observable.defer(Func0 {
-            val objectAsJson = sharedPreferences.getString(key, null) ?:
-                    return@Func0 Observable.just(defaultValue)
+    override fun <T> getObjectForKeyWithDefault(
+        key: String,
+        classOfObject: Class<T>,
+        defaultValue: T
+    ): Single<T> {
+        return Single.defer {
+            val objectAsJson =
+                sharedPreferences.getString(key, null) ?: return@defer Single.just(defaultValue)
 
             val gson = Gson()
             val fromJson = gson.fromJson(objectAsJson, classOfObject)
-            Observable.just(fromJson)
-        })
+            Single.just(fromJson)
+        }
     }
 
 }

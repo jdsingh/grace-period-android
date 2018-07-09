@@ -30,14 +30,17 @@ import com.orchestral.graceperiod.lifecycle.CurrentActivityProvider
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
-class RestartAppCallback internal constructor(val currentActivityProvider: CurrentActivityProvider)
-    : GracePeriodCallback {
+class RestartAppCallback internal constructor(
+    private val currentActivityProvider: CurrentActivityProvider
+) : GracePeriodCallback {
 
     override fun onGracePeriodExpired() {
         val currentActivity = currentActivityProvider.currentActivity!!
-        val i = currentActivity.baseContext?.packageManager?.getLaunchIntentForPackage(currentActivity.baseContext?.packageName)
-        i?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        currentActivity.startActivity(i)
+        val intent = currentActivity.baseContext?.packageManager?.getLaunchIntentForPackage(
+            currentActivity.baseContext?.packageName
+        )
+        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        currentActivity.startActivity(intent)
     }
 
     override fun onGracePeriodDialogDisplayed() {

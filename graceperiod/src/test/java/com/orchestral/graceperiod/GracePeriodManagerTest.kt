@@ -24,37 +24,40 @@
 
 package com.orchestral.graceperiod
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.orchestral.common.testrules.TestSchedulerRule
+import com.nhaarman.mockito_kotlin.whenever
 import com.orchestral.graceperiod.callback.GracePeriodCallback
 import com.orchestral.graceperiod.lifecycle.AppInBackgroundAgent
+import com.orchestral.graceperiod.utils.TestSchedulerRule
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-import rx.Observable
 import java.util.concurrent.TimeUnit
 
+private const val DEFAULT_EXPIRY_TIME = 10
 
 class GracePeriodManagerTest {
 
-    @Mock lateinit var mockGracePeriodCallback: GracePeriodCallback
-    @Mock lateinit var mockAppInBackgroundAgent: AppInBackgroundAgent
+    @get:Rule
+    val testSchedulerRule = TestSchedulerRule()
+    private val testScheduler = testSchedulerRule.testScheduler
 
-    @get:Rule val testSchedulerRule = TestSchedulerRule()
+    private val mockGracePeriodCallback: GracePeriodCallback = mock()
+    private val mockAppInBackgroundAgent: AppInBackgroundAgent = mock()
 
     private lateinit var gracePeriodManager: GracePeriodManager
 
-    private val DEFAULT_EXPIRY_TIME = 10
-
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        gracePeriodManager = GracePeriodManager(mockGracePeriodCallback, DEFAULT_EXPIRY_TIME, mockAppInBackgroundAgent)
+        gracePeriodManager = GracePeriodManager(
+            mockGracePeriodCallback,
+            DEFAULT_EXPIRY_TIME,
+            mockAppInBackgroundAgent
+        )
     }
 
     @Test
@@ -66,7 +69,8 @@ class GracePeriodManagerTest {
 
     @Test
     fun `when grace period times out and app is in foreground should tell callback about expired grace period`() {
-        `when`(mockAppInBackgroundAgent.isAppInBackground()).thenReturn(Observable.just(false))
+        whenever(mockAppInBackgroundAgent.isAppInBackground())
+            .thenReturn(Single.just(false))
 
         gracePeriodManager.onGracePeriodTimeout()
 
@@ -75,7 +79,8 @@ class GracePeriodManagerTest {
 
     @Test
     fun `when grace period times out and app is in background should not tell callback about expired grace period`() {
-        `when`(mockAppInBackgroundAgent.isAppInBackground()).thenReturn(Observable.just(true))
+        whenever(mockAppInBackgroundAgent.isAppInBackground())
+            .thenReturn(Single.just(true))
 
         gracePeriodManager.onGracePeriodTimeout()
 
@@ -85,11 +90,12 @@ class GracePeriodManagerTest {
     @Test
     fun `when the expiry time is updated it should not expire after the old time set up elapsed`() {
         val newExpiryTime = DEFAULT_EXPIRY_TIME + 1
-        `when`(mockAppInBackgroundAgent.isAppInBackground()).thenReturn(Observable.just(false))
-        gracePeriodManager.enable()
+        whenever(mockAppInBackgroundAgent.isAppInBackground())
+            .thenReturn(Single.just(false))
 
+        gracePeriodManager.enable()
         gracePeriodManager.updateExpiryTime(newExpiryTime)
-        testSchedulerRule.testScheduler.advanceTimeBy(DEFAULT_EXPIRY_TIME.toLong(), TimeUnit.SECONDS)
+        testScheduler.advanceTimeBy(DEFAULT_EXPIRY_TIME.toLong(), TimeUnit.SECONDS)
 
         verify(mockGracePeriodCallback, never()).onGracePeriodExpired()
     }
@@ -97,11 +103,12 @@ class GracePeriodManagerTest {
     @Test
     fun `when the expiry time is updated it should expire after the new time set up elapsed`() {
         val newExpiryTime = DEFAULT_EXPIRY_TIME + 1
-        `when`(mockAppInBackgroundAgent.isAppInBackground()).thenReturn(Observable.just(false))
-        gracePeriodManager.enable()
+        whenever(mockAppInBackgroundAgent.isAppInBackground())
+            .thenReturn(Single.just(false))
 
+        gracePeriodManager.enable()
         gracePeriodManager.updateExpiryTime(newExpiryTime)
-        testSchedulerRule.testScheduler.advanceTimeBy(newExpiryTime.toLong(), TimeUnit.SECONDS)
+        testScheduler.advanceTimeBy(newExpiryTime.toLong(), TimeUnit.SECONDS)
 
         verify(mockGracePeriodCallback).onGracePeriodExpired()
     }

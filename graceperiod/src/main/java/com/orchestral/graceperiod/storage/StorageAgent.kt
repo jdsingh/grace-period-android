@@ -24,9 +24,9 @@
 
 package com.orchestral.graceperiod.storage
 
-import rx.Observable
+import io.reactivex.Completable
+import io.reactivex.Single
 import java.io.Serializable
-
 
 interface StorageAgent {
 
@@ -40,7 +40,7 @@ interface StorageAgent {
      * *
      * @return
      */
-    fun storeObjectWithKey(key: String, objectToStore: Serializable): Observable<Void>
+    fun storeObjectWithKey(key: String, objectToStore: Serializable): Completable
 
     /**
      * If successful, will emit a single null value to observer. On failure, will call observer's onError()
@@ -51,7 +51,7 @@ interface StorageAgent {
      * @return
      */
 
-    fun clearObjectWithKey(key: String): Observable<Void>
+    fun clearObjectWithKey(key: String): Completable
 
     /**
      * Clears everything from storage. If successful, will emit a single null value to observer.
@@ -60,7 +60,7 @@ interface StorageAgent {
      * @return
      */
 
-    fun clear(): Observable<Void>
+    fun clear(): Completable
 
     /**
      * Emits the object from storage with the given key, or throws an [NoObjectForKeyException]
@@ -75,7 +75,7 @@ interface StorageAgent {
      * @return
      */
 
-    fun <T> getObjectForKey(key: String, classOfObject: Class<T>): Observable<T>
+    fun <T> getObjectForKey(key: String, classOfObject: Class<T>): Single<T>
 
 
     /**
@@ -91,7 +91,11 @@ interface StorageAgent {
      * @return
      */
 
-    fun <T> getObjectForKeyWithDefault(key: String, classOfObject: Class<T>, defaultValue: T): Observable<T>
+    fun <T> getObjectForKeyWithDefault(
+        key: String,
+        classOfObject: Class<T>,
+        defaultValue: T
+    ): Single<T>
 
     class WriteFailureException : Throwable()
 

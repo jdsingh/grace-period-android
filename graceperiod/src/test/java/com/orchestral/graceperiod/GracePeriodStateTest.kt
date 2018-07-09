@@ -24,35 +24,26 @@
 
 package com.orchestral.graceperiod
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.orchestral.common.testrules.TestSchedulerRule
 import com.orchestral.graceperiod.GracePeriodInternal.State.*
+import com.orchestral.graceperiod.utils.TestSchedulerRule
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import rx.schedulers.TestScheduler
 import java.util.concurrent.TimeUnit
 
+private const val DEFAULT_GRACE_PERIOD_TIME_SECONDS = 2000
 
 class GracePeriodStateTest {
 
-    @Mock lateinit private var mockGracePeriodStateCallback: GracePeriodStateCallback
-    @get:Rule val testSchedulerRule = TestSchedulerRule()
+    @get:Rule
+    val testSchedulerRule = TestSchedulerRule()
+    private val testScheduler = testSchedulerRule.testScheduler
 
+    private val mockGracePeriodStateCallback: GracePeriodStateCallback = mock()
     private var gracePeriodState: GracePeriodInternal.State = STATE_DISABLED
-    lateinit var testScheduler: TestScheduler
-
-    val DEFAULT_GRACE_PERIOD_TIME_SECONDS = 2000
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        testScheduler = testSchedulerRule.testScheduler
-    }
 
     @Test
     fun `if grace period is disabled should never invoke any callback`() {

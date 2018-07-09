@@ -76,7 +76,7 @@ Note: To call it from Java, use `GracePeriod.INSTANCE.methodName()`
 
 ### Dependencies
 
-It is important to note that Grace Period library currently depends on [RxJava 1.x](https://github.com/ReactiveX/RxJava/tree/1.x). There are plans to update to [RxJava 2.x](https://github.com/ReactiveX/RxJava/tree/2.x) and it is also a possibility to remove this dependency altogether. This would require though to re-write some of the core logic of the library.
+It is important to note that Grace Period library depends on [RxJava 2.x](https://github.com/ReactiveX/RxJava/tree/2.x).
 
 ### Communication Channels
 

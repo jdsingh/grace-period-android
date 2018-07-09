@@ -22,12 +22,7 @@
  * THE SOFTWARE.
  */
 
-package com.orchestral.consumermobile.presentation.kickedout
-
-import com.orchestral.graceperiod.presentation.Presenter
-import com.orchestral.graceperiod.presentation.GracePeriodMessageView
-import com.orchestral.graceperiod.presentation.KickedOutMessageView
-
+package com.orchestral.graceperiod.presentation
 
 internal interface KickedOutPresenter : Presenter<KickedOutMessageView> {
 

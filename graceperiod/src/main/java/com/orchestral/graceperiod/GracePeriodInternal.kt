@@ -24,14 +24,17 @@
 
 package com.orchestral.graceperiod
 
-import rx.Observable
-import rx.Subscription
-import rx.subjects.PublishSubject
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
 internal interface GracePeriodInternal {
 
-    fun init(gracePeriodStateCallback: GracePeriodStateCallback, gracePeriodExpiryTimeInSeconds: Int) {
+    fun init(
+        gracePeriodStateCallback: GracePeriodStateCallback,
+        gracePeriodExpiryTimeInSeconds: Int
+    ) {
     }
 
     fun restart() {
@@ -49,14 +52,16 @@ internal interface GracePeriodInternal {
 
         STATE_ENABLED {
 
-            private val gracePeriodObservable = PublishSubject.create<Void>()
+            private val gracePeriodObservable = PublishSubject.create<Byte>()
             private var gracePeriodExpireTimeInSeconds = 0L
 
-            private lateinit var gracePeriodSubscription: Subscription
+            private lateinit var gracePeriodDisposable: Disposable
             private lateinit var gracePeriodStateCallback: GracePeriodStateCallback
 
-            override fun init(gracePeriodStateCallback: GracePeriodStateCallback,
-                              gracePeriodExpiryTimeInSeconds: Int) {
+            override fun init(
+                gracePeriodStateCallback: GracePeriodStateCallback,
+                gracePeriodExpiryTimeInSeconds: Int
+            ) {
                 this.gracePeriodExpireTimeInSeconds = gracePeriodExpiryTimeInSeconds.toLong()
                 this.gracePeriodStateCallback = gracePeriodStateCallback
 
@@ -64,28 +69,28 @@ internal interface GracePeriodInternal {
             }
 
             private fun startGracePeriod() {
-                gracePeriodSubscription = gracePeriodObservable
-                        .restartGracePeriodTimer()
-                        .subscribe()
+                gracePeriodDisposable = gracePeriodObservable
+                    .restartGracePeriodTimer()
+                    .subscribe()
                 restart()
             }
 
             override fun restart() {
-                gracePeriodObservable.onNext(null)
+                gracePeriodObservable.onNext(1)
             }
 
             override fun cancel() {
-                gracePeriodSubscription.unsubscribe()
+                gracePeriodDisposable.dispose()
             }
 
             private fun <T> Observable<T>.restartGracePeriodTimer(): Observable<Long> {
                 return this
-                        .switchMap {
-                            Observable.timer(gracePeriodExpireTimeInSeconds, TimeUnit.SECONDS)
-                                    .doOnCompleted {
-                                        gracePeriodStateCallback.onGracePeriodTimeout()
-                                    }
-                        }
+                    .switchMap {
+                        Observable.timer(gracePeriodExpireTimeInSeconds, TimeUnit.SECONDS)
+                            .doOnComplete {
+                                gracePeriodStateCallback.onGracePeriodTimeout()
+                            }
+                    }
             }
 
         },
@@ -94,7 +99,10 @@ internal interface GracePeriodInternal {
 
             private lateinit var gracePeriodStateCallback: GracePeriodStateCallback
 
-            override fun init(gracePeriodStateCallback: GracePeriodStateCallback, gracePeriodExpiryTimeInSeconds: Int) {
+            override fun init(
+                gracePeriodStateCallback: GracePeriodStateCallback,
+                gracePeriodExpiryTimeInSeconds: Int
+            ) {
                 this.gracePeriodStateCallback = gracePeriodStateCallback
             }
 

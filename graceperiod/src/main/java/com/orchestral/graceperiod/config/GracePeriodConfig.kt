@@ -31,11 +31,12 @@ import com.orchestral.graceperiod.callback.GracePeriodCallback
  * Copyright © 2017 Orion Health. All rights reserved.
  */
 class GracePeriodConfig internal constructor(
-        internal val activityLifeCycleCallbacks: Application.ActivityLifecycleCallbacks?,
-        internal val application: Application,
-        internal val expiryTime: Int,
-        internal val callback: GracePeriodCallback?,
-        internal val dialogConfig: GracePeriodDialogConfig) {
+    internal val activityLifeCycleCallbacks: Application.ActivityLifecycleCallbacks?,
+    internal val application: Application,
+    internal val expiryTime: Int,
+    internal val callback: GracePeriodCallback?,
+    internal val dialogConfig: GracePeriodDialogConfig
+) {
 
     open class Builder {
         private var application: Application? = null
@@ -73,7 +74,13 @@ class GracePeriodConfig internal constructor(
             if (application == null) {
                 throw IllegalArgumentException("You need to provide your application object")
             }
-            return GracePeriodConfig(activityLifeCycleCallbacks, application!!, expiryTime, callback, dialogConfig?: GracePeriodDialogConfig.Builder().build())
+            return GracePeriodConfig(
+                activityLifeCycleCallbacks,
+                application!!,
+                expiryTime,
+                callback,
+                dialogConfig ?: GracePeriodDialogConfig.Builder().build()
+            )
         }
     }
 

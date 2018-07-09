@@ -26,7 +26,6 @@ package com.orchestral.graceperiod.lifecycle
 
 import android.app.Activity
 
-
 internal class CurrentActivityProvider {
 
     var currentActivity: Activity? = null

@@ -24,40 +24,28 @@
 
 package com.orchestral.graceperiod.presentation
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.verify
-import com.orchestral.consumermobile.presentation.kickedout.KickedOutPresenter
+import com.nhaarman.mockito_kotlin.*
 import com.orchestral.graceperiod.callback.GracePeriodCallback
 import com.orchestral.graceperiod.config.GracePeriodDialogConfig
 import com.orchestral.graceperiod.usecases.WasKickedOutByGracePeriodUseCase
-import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 
 class KickedOutPresenterImplTest {
 
     private lateinit var kickedOutPresenter: KickedOutPresenter
 
-    @Mock lateinit var mockWasKickedOutUseCase: WasKickedOutByGracePeriodUseCase
-    @Mock lateinit var mockView: KickedOutMessageView
-    @Mock lateinit var mockGPMessageView: GracePeriodMessageView
-    @Mock lateinit var mockGracePeriodCallback: GracePeriodCallback
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
+    private val mockWasKickedOutUseCase: WasKickedOutByGracePeriodUseCase = mock()
+    private val mockView: KickedOutMessageView = mock()
+    private val mockGPMessageView: GracePeriodMessageView = mock()
+    private val mockGracePeriodCallback: GracePeriodCallback = mock()
 
     @Test
     fun `it should not display the dialog when it is configured to false`() {
         kickedOutPresenter = KickedOutPresenterImpl(
-                mockWasKickedOutUseCase,
-                GracePeriodDialogConfig.Builder().showDialogWhenExpired(false).build(),
-                mockGracePeriodCallback)
+            mockWasKickedOutUseCase,
+            GracePeriodDialogConfig.Builder().showDialogWhenExpired(false).build(),
+            mockGracePeriodCallback
+        )
         kickedOutPresenter.attachView(mockView)
 
         kickedOutPresenter.onNewKickedOutMessageViewCreated()
@@ -70,33 +58,41 @@ class KickedOutPresenterImplTest {
     @Test
     fun `it should display default dialog when no custom message or dialog is provided`() {
         kickedOutPresenter = KickedOutPresenterImpl(
-                mockWasKickedOutUseCase,
-                GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).build(),
-                mockGracePeriodCallback)
-        `when`(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(true)
+            mockWasKickedOutUseCase,
+            GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).build(),
+            mockGracePeriodCallback
+        )
+        whenever(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(true)
         kickedOutPresenter.attachView(mockView)
 
         kickedOutPresenter.onNewKickedOutMessageViewCreated()
 
         verify(mockView).showDefaultKickedOutByGracePeriodDialog()
         verify(mockView, never()).showCustomKickedOutByGracePeriodDialog(any())
-        verify(mockView, never()).showDefaultKickedOutByGracePeriodDialog(any<String>(), any<String>(), any<String>())
+        verify(mockView, never()).showDefaultKickedOutByGracePeriodDialog(any(), any(), any())
     }
 
     @Test
     fun `it should display dialog with custom title and message when they are provided`() {
         kickedOutPresenter = KickedOutPresenterImpl(
-                mockWasKickedOutUseCase,
-                GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).dialogText("text").dialogTitle("title").build(),
-                mockGracePeriodCallback)
-        `when`(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(true)
+            mockWasKickedOutUseCase,
+            GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).dialogText("text").dialogTitle(
+                "title"
+            ).build(),
+            mockGracePeriodCallback
+        )
+        whenever(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(true)
         kickedOutPresenter.attachView(mockView)
 
         kickedOutPresenter.onNewKickedOutMessageViewCreated()
 
         verify(mockView, never()).showDefaultKickedOutByGracePeriodDialog()
         verify(mockView, never()).showCustomKickedOutByGracePeriodDialog(any())
-        verify(mockView).showDefaultKickedOutByGracePeriodDialog(eq("title"), eq("text"), any<String>())
+        verify(mockView).showDefaultKickedOutByGracePeriodDialog(
+            eq("title"),
+            eq("text"),
+            any<String>()
+        )
     }
 
     @Test
@@ -107,10 +103,11 @@ class KickedOutPresenterImplTest {
     @Test
     fun `it should notify callback about grace period message displayed when dialog is enabled and user was kicked out`() {
         kickedOutPresenter = KickedOutPresenterImpl(
-                mockWasKickedOutUseCase,
-                GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).build(),
-                mockGracePeriodCallback)
-        `when`(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(true)
+            mockWasKickedOutUseCase,
+            GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).build(),
+            mockGracePeriodCallback
+        )
+        whenever(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(true)
         kickedOutPresenter.attachView(mockView)
 
         kickedOutPresenter.onNewKickedOutMessageViewCreated()
@@ -121,10 +118,11 @@ class KickedOutPresenterImplTest {
     @Test
     fun `it should never notify callback about grace period message displayed when the user was not kicked out`() {
         kickedOutPresenter = KickedOutPresenterImpl(
-                mockWasKickedOutUseCase,
-                GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).build(),
-                mockGracePeriodCallback)
-        `when`(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(false)
+            mockWasKickedOutUseCase,
+            GracePeriodDialogConfig.Builder().showDialogWhenExpired(true).build(),
+            mockGracePeriodCallback
+        )
+        whenever(mockWasKickedOutUseCase.wasKickedOut()).thenReturn(false)
         kickedOutPresenter.attachView(mockView)
 
         kickedOutPresenter.onNewKickedOutMessageViewCreated()

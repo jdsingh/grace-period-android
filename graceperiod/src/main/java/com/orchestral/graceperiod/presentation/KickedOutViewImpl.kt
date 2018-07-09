@@ -32,9 +32,13 @@ import com.orchestral.graceperiod.util.createAndShowDialog
 /**
  * Copyright © 2017 Orion Health. All rights reserved.
  */
-internal class KickedOutViewImpl(val activity: Activity) : KickedOutMessageView {
+internal class KickedOutViewImpl(private val activity: Activity) : KickedOutMessageView {
 
-    override fun showDefaultKickedOutByGracePeriodDialog(title: String, text: String, okButtonText: String) {
+    override fun showDefaultKickedOutByGracePeriodDialog(
+        title: String,
+        text: String,
+        okButtonText: String
+    ) {
         activity.createAndShowDialog(title, text, okButtonText)
     }
 
@@ -44,14 +48,17 @@ internal class KickedOutViewImpl(val activity: Activity) : KickedOutMessageView 
 
     override fun showDefaultKickedOutByGracePeriodDialog() {
         activity.createAndShowDialog(
-                defaultDialogTitle(),
-                defaultDialogText(),
-                defaultDialogButtonText())
+            defaultDialogTitle(),
+            defaultDialogText(),
+            defaultDialogButtonText()
+        )
     }
 
-    private fun defaultDialogTitle() = activity.getString(R.string.grace_period_expired_dialog_title)
+    private fun defaultDialogTitle() =
+        activity.getString(R.string.grace_period_expired_dialog_title)
 
-    private fun defaultDialogText() = activity.getString(R.string.grace_period_expired_dialog_message)
+    private fun defaultDialogText() =
+        activity.getString(R.string.grace_period_expired_dialog_message)
 
     private fun defaultDialogButtonText() = activity.getString(R.string.button_ok)
 
